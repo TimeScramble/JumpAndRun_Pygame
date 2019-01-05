@@ -74,7 +74,7 @@ class Player():
 				if self.speed > 0:
 					self.design = pygame.image.load("running2right.png")
 				else:
-					self.design = pygame.image.load("running2leftq.png")
+					self.design = pygame.image.load("running2left.png")
 			else:
 				self.look = "running1"
 				if self.speed > 0:
