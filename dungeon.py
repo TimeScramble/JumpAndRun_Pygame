@@ -15,7 +15,7 @@ screen = pygame.display.set_mode(size)
 background = pygame.image.load("background.png").convert_alpha()
 
 #Define Length and Height of Movement_Units
-Length_Move = 0.4
+Length_Move = 0.6
 Height_Move = 0.4
 #Define Length and Height of Blocks
 LENGTH = 84
@@ -37,7 +37,6 @@ def load_level(level):
 		for line in lines:
 			if len(line) < max_length:
 				line.append(None)
-	print(lines)
 	return lines
 
 

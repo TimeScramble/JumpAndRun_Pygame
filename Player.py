@@ -22,7 +22,7 @@ class Player():
 		self.in_jump = True
 		self.in_move = False
 		self.global_move = 0
-		self.Length_Move = 0.4
+		self.Length_Move = 0.6
 
 	def show(self):
 		if self.in_move != True:
@@ -95,7 +95,7 @@ class Player():
 					to_return = SPEED
 					self.global_move += SPEED * self.Length_Move
 			assert(self.movementUnit.movable == True)
-			assert(self.movementUnit.x - self.global_move > 10)
+			assert(self.movementUnit.x - self.global_move > 20)
 		except:
 			#if not, make player go back
 			self.movementX += -self.speed
