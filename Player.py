@@ -1,6 +1,6 @@
 import sys, pygame
 class Player():
-	
+
 	def __init__(self, MovementArray, MovementUnit, screen, MovementX, MovementY, background):
 		self.design = pygame.image.load("standing.png").convert_alpha()
 		self.look = "standing"
@@ -8,6 +8,8 @@ class Player():
 		self.movementUnit = MovementUnit
 		self.movementX = MovementX
 		self.movementY = MovementY
+		self.realX = MovementX
+		self.realY = MovementY
 		self.rect = self.design.get_rect()
 		self.rect.right = 0
 		self.rect.bottom = 0
@@ -18,7 +20,7 @@ class Player():
 		self.background = background
 		self.in_jump = True
 		self.in_move = False
-	
+
 	def show(self):
 		if self.in_move != True:
 			self.look = "standing"
@@ -31,7 +33,7 @@ class Player():
 		self.rect = self.rect.move(self.movementUnit.x, self.movementUnit.y)
 		self.screen.blit(self.design, self.rect)
 		self.in_move = False
-									   
+
 	def physics(self):
 		try:
 			assert(self.movementArray[self.movementY+1][self.movementX].movable == True or (self.in_jump == True and self.velocity < -1))
@@ -52,8 +54,8 @@ class Player():
 		except:
 			self.in_jump = False
 			self.velocity = 0
-				
-	def move(self, direction):
+
+	def move(self, direction, to_move):
 		self.in_move = True
 		#set values for speed depending on direction
 		SPEED = 40
@@ -65,7 +67,7 @@ class Player():
 			self.speed = -SPEED
 		elif direction == None:
 			self.speed = 0
-		#add spedd to x_coordinate
+		#add speed to x_coordinate
 		self.movementX += self.speed
 		#load running design
 		if self.in_jump != True:
@@ -84,23 +86,22 @@ class Player():
 		#check if move is allowed (if movable == True)
 		try:
 			self.movementUnit = self.movementArray[self.movementY][self.movementX]
+			if self.movementUnit.x > 50:
+				self.move_blocks(SPEED, to_move)
 			assert(self.movementUnit.movable == True)
 		except:
 			#if not, make player go back
 			self.movementX += -self.speed
+			self.move_blocks(-SPEED, to_move)
 			self.movementUnit = self.movementArray[self.movementY][self.movementX]
-			
+
 	def jump(self):
 		if self.in_jump == False:
 			self.velocity = -140
 			self.in_jump = True
 			self.look = "standing"
 			self.design = pygame.image.load("standing.png")
-			
 
-
-			
-		
-	
-	
-
+	def move_blocks(self, speed, to_move):
+		for unit in to_move:
+			unit.move(speed)

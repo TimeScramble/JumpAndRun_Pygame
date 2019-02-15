@@ -7,6 +7,7 @@ clock = pygame.time.Clock()
 
 size = width, height = 1000, 700
 to_show = []
+to_move = []
 speed = [5, 9]
 black = 0, 0, 0
 screen = pygame.display.set_mode(size)
@@ -20,7 +21,24 @@ LENGTH = 84
 HEIGHT = 84
 
 
-test = [[None,None,None,None,None,None,None,None,None], [None,None,None,None,None,None,None,None,None], [None,None,None,None,None,None,None,None,None],  [None,None,None,None,None,None,None,None,None], [None,None,None,"_","_","_",None,None,None], [None,"_",None,None,None,None,None,None,None], ["_",None,None,None,None,None,None,None,"_"], ["_","_","_","_","_","_","_","_","_"]]
+def load_level(level):
+    level = open(level)
+    lines = []
+    for line in level:
+        text = line.rstrip()
+        lines.append(list(line))
+    max_length = 0
+    for line in lines:
+        if len(line) > max_length:
+            max_length = len(line)
+    for i in range(max_length):
+        for line in lines:
+            if len(line) < max_length:
+                line.append(None)
+    print(lines)
+    return lines
+
+
 
 def init_block(twoD_Array):
 	#Create two_dimensional Array for all Movement_Units
@@ -28,8 +46,10 @@ def init_block(twoD_Array):
 	for y in range(int(len(twoD_Array)*HEIGHT/Height_Move)):
 		layer = []
 		for x in range(int(len(twoD_Array[0])*LENGTH/Length_Move)):
-			layer.append(Movement_Unit(x*Length_Move, y*Height_Move))
-		plan.append(layer)
+            unit = Movement_Unit(x*Length_Move, y*Height_Move)
+			layer.append(unit)
+            to_move.append(unit)
+        plan.append(layer)
 	#Iterate through input
 	for y in range(len(twoD_Array)):
 		for x in range(len(twoD_Array[y])):
@@ -48,14 +68,14 @@ def init_block(twoD_Array):
 							plan[i][q].setMovementStatus(False)
 
 	return plan
-	
-plan = init_block(test)
+
+plan = init_block(load_level("Levels/1.1.txt"))
 
 player = Player(plan, plan[20][int(LENGTH/Length_Move)-1], screen,int( LENGTH/Length_Move-1), 20, background)
 to_show.append(player)
-	
+
 current_key = None
-			
+
 while True:
 	clock.tick(60)
 	screen.blit(background, (0, 0))
@@ -67,9 +87,9 @@ while True:
 			player.deign = pygame.image.load("standing.png")
 	keys = pygame.key.get_pressed()
 	if keys[pygame.K_RIGHT]:
-		player.move("right")
+		player.move("right", to_move)
 	elif keys[pygame.K_LEFT]:
-		player.move("left")
+		player.move("left", to_move)
 	if keys[pygame.K_UP] or keys[pygame.K_SPACE]:
 		player.jump()
 	for item in to_show:
