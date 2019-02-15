@@ -1,6 +1,7 @@
 import sys, pygame
 from Field import Block, Movement_Unit
 from Player import Player
+from time import *
 pygame.init()
 pygame.key.set_repeat(10, 10)
 clock = pygame.time.Clock()
@@ -22,21 +23,22 @@ HEIGHT = 84
 
 
 def load_level(level):
-    level = open(level)
-    lines = []
-    for line in level:
-        text = line.rstrip()
-        lines.append(list(line))
-    max_length = 0
-    for line in lines:
-        if len(line) > max_length:
-            max_length = len(line)
-    for i in range(max_length):
-        for line in lines:
-            if len(line) < max_length:
-                line.append(None)
-    print(lines)
-    return lines
+	level = open(level)
+	lines = []
+	for line in level:
+		text = line.rstrip()
+		lines.append(list(line))
+	lines.append([])
+	max_length = 0
+	for line in lines:
+		if len(line) > max_length:
+			max_length = len(line)
+	for i in range(max_length):
+		for line in lines:
+			if len(line) < max_length:
+				line.append(None)
+	print(lines)
+	return lines
 
 
 
@@ -46,10 +48,10 @@ def init_block(twoD_Array):
 	for y in range(int(len(twoD_Array)*HEIGHT/Height_Move)):
 		layer = []
 		for x in range(int(len(twoD_Array[0])*LENGTH/Length_Move)):
-            unit = Movement_Unit(x*Length_Move, y*Height_Move)
+			unit = Movement_Unit(x*Length_Move, y*Height_Move)
 			layer.append(unit)
-            to_move.append(unit)
-        plan.append(layer)
+			to_move.append(unit)
+		plan.append(layer)
 	#Iterate through input
 	for y in range(len(twoD_Array)):
 		for x in range(len(twoD_Array[y])):
@@ -77,6 +79,7 @@ to_show.append(player)
 current_key = None
 
 while True:
+	should_move = 0
 	clock.tick(60)
 	screen.blit(background, (0, 0))
 	for event in pygame.event.get():
@@ -87,11 +90,15 @@ while True:
 			player.deign = pygame.image.load("standing.png")
 	keys = pygame.key.get_pressed()
 	if keys[pygame.K_RIGHT]:
-		player.move("right", to_move)
+		should_move = player.move("right", to_move)
 	elif keys[pygame.K_LEFT]:
-		player.move("left", to_move)
+		should_move = player.move("left", to_move)
 	if keys[pygame.K_UP] or keys[pygame.K_SPACE]:
 		player.jump()
 	for item in to_show:
+		try:
+			item.x += -should_move
+		except:
+			None
 		item.show()
 	pygame.display.flip()

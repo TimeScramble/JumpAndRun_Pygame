@@ -7,8 +7,6 @@ class Field():
 		self.design = None
 		if toBePlaced == True:
 			return x, y
-		def move(self, speed):
-			self.x += -speed
 
 
 class Block(Field):
@@ -23,6 +21,8 @@ class Block(Field):
 		self.screen.blit(self.design, self.rect)
 
 	def show(self):
+		self.rect = self.design.get_rect()
+		self.rect = self.rect.move([self.x,self.y-5])
 		self.screen.blit(self.design, self.rect)
 
 
@@ -33,5 +33,3 @@ class Movement_Unit():
 		self.movable = True
 	def setMovementStatus(self, movementStatus):
 		self.movable = movementStatus
-	def move(self, speed):
-		self.x += -speed

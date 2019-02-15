@@ -1,4 +1,5 @@
 import sys, pygame
+global global_move
 class Player():
 
 	def __init__(self, MovementArray, MovementUnit, screen, MovementX, MovementY, background):
@@ -20,6 +21,8 @@ class Player():
 		self.background = background
 		self.in_jump = True
 		self.in_move = False
+		self.global_move = 0
+		self.Length_Move = 0.4
 
 	def show(self):
 		if self.in_move != True:
@@ -30,7 +33,7 @@ class Player():
 		self.physics()
 		self.rect.right = 0
 		self.rect.bottom = 0
-		self.rect = self.rect.move(self.movementUnit.x, self.movementUnit.y)
+		self.rect = self.rect.move(self.movementUnit.x - self.global_move, self.movementUnit.y)
 		self.screen.blit(self.design, self.rect)
 		self.in_move = False
 
@@ -56,6 +59,7 @@ class Player():
 			self.velocity = 0
 
 	def move(self, direction, to_move):
+		to_return = 0
 		self.in_move = True
 		#set values for speed depending on direction
 		SPEED = 40
@@ -86,14 +90,21 @@ class Player():
 		#check if move is allowed (if movable == True)
 		try:
 			self.movementUnit = self.movementArray[self.movementY][self.movementX]
-			if self.movementUnit.x > 50:
-				self.move_blocks(SPEED, to_move)
+			if direction == "right":
+				if self.movementUnit.x - self.global_move > 500:
+					to_return = SPEED
+					self.global_move += SPEED * self.Length_Move
 			assert(self.movementUnit.movable == True)
+			assert(self.movementUnit.x - self.global_move > 10)
 		except:
 			#if not, make player go back
 			self.movementX += -self.speed
-			self.move_blocks(-SPEED, to_move)
+			if direction == "right":
+				if self.movementUnit.x - (self.global_move - SPEED) > 500:
+					to_return = 0
+					self.global_move += -SPEED * self.Length_Move
 			self.movementUnit = self.movementArray[self.movementY][self.movementX]
+		return to_return * self.Length_Move
 
 	def jump(self):
 		if self.in_jump == False:
@@ -104,4 +115,4 @@ class Player():
 
 	def move_blocks(self, speed, to_move):
 		for unit in to_move:
-			unit.move(speed)
+			unit.x += -speed
