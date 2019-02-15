@@ -25,7 +25,7 @@ class Player():
 		self.Length_Move = 0.6
 
 	def show(self):
-		if self.in_move != True:
+		if self.in_move != True and self.in_jump != True:
 			self.look = "standing"
 			self.design = pygame.image.load("standing.png")
 		oldx = self.rect.right
@@ -33,7 +33,7 @@ class Player():
 		self.physics()
 		self.rect.right = 0
 		self.rect.bottom = 0
-		self.rect = self.rect.move(self.movementUnit.x - self.global_move, self.movementUnit.y)
+		self.rect = self.rect.move(self.movementUnit.x - self.global_move, self.movementUnit.y - 6.5)
 		self.screen.blit(self.design, self.rect)
 		self.in_move = False
 
@@ -110,8 +110,8 @@ class Player():
 		if self.in_jump == False:
 			self.velocity = -140
 			self.in_jump = True
-			self.look = "standing"
-			self.design = pygame.image.load("standing.png")
+			"""self.look = "standing"
+			self.design = pygame.image.load("standing.png")"""
 
 	def move_blocks(self, speed, to_move):
 		for unit in to_move:
