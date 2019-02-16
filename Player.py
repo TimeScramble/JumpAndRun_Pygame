@@ -33,7 +33,7 @@ class Player():
 		self.physics()
 		self.rect.right = 0
 		self.rect.bottom = 0
-		self.rect = self.rect.move(self.movementUnit.x - self.global_move, self.movementUnit.y - 6.5)
+		self.rect = self.rect.move(self.movementUnit.x - self.global_move, self.movementUnit.y+0.5)
 		self.screen.blit(self.design, self.rect)
 		self.in_move = False
 
