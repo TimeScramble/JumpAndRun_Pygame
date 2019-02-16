@@ -40,6 +40,19 @@ def load_level(level):
 	return lines
 
 
+def create_wall(x, y, plan):
+	block = Block(screen, x * LENGTH, y * HEIGHT)
+	to_show.append(block)
+	#Set Movement_Status to False, if Dungeon_Wall is created
+	try:
+		for q in range(int((x*LENGTH)/Length_Move),int(((x+2)*LENGTH)/Length_Move)):
+			for i in range(int((y*HEIGHT)/Height_Move),int(((y+2)*HEIGHT)/Height_Move)):
+				plan[i][q].setMovementStatus(False)
+	except:
+		for q in range(int((x*LENGTH)/Length_Move),int(((x+1)*LENGTH)/Length_Move)):
+			for i in range(int((y*HEIGHT)/Height_Move),int(((y+1)*HEIGHT)/Height_Move)):
+				plan[i][q].setMovementStatus(False)
+
 
 def init_block(twoD_Array):
 	#Create two_dimensional Array for all Movement_Units
@@ -56,17 +69,9 @@ def init_block(twoD_Array):
 		for x in range(len(twoD_Array[y])):
 			#Create Dungeon_Wall for input "_"
 			if twoD_Array[y][x] == "_":
-				block = Block(screen, x * LENGTH, y * HEIGHT)
-				to_show.append(block)
-				#Set Movement_Status to False, if Dungeon_Wall is created
-				try:
-					for q in range(int((x*LENGTH)/Length_Move),int(((x+2)*LENGTH)/Length_Move)):
-						for i in range(int((y*HEIGHT)/Height_Move),int(((y+2)*HEIGHT)/Height_Move)):
-							plan[i][q].setMovementStatus(False)
-				except:
-					for q in range(int((x*LENGTH)/Length_Move),int(((x+1)*LENGTH)/Length_Move)):
-						for i in range(int((y*HEIGHT)/Height_Move),int(((y+1)*HEIGHT)/Height_Move)):
-							plan[i][q].setMovementStatus(False)
+				create_wall(x, y, plan)
+			"""elif twoD_Array[y][x] == "s":"""
+
 
 	return plan
 
@@ -84,9 +89,6 @@ while True:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			sys.exit()
-		elif event.type == pygame.KEYUP:
-			player.look = "standing"
-			player.deign = pygame.image.load("standing.png")
 	keys = pygame.key.get_pressed()
 	if keys[pygame.K_RIGHT]:
 		should_move = player.move("right", to_move)

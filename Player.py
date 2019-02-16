@@ -1,16 +1,14 @@
 import sys, pygame
 global global_move
-class Player():
 
-	def __init__(self, MovementArray, MovementUnit, screen, MovementX, MovementY, background):
-		self.design = pygame.image.load("standing.png").convert_alpha()
-		self.look = "standing"
+class Person():
+	def __init__(self, MovementArray, MovementUnit, screen, MovementX, MovementY, background, designfolder):
+		self.design = pygame.image.load(self.designfolder+"running2right.png").convert_alpha()
+		self.look = "running2right"
 		self.movementArray = MovementArray
 		self.movementUnit = MovementUnit
 		self.movementX = MovementX
 		self.movementY = MovementY
-		self.realX = MovementX
-		self.realY = MovementY
 		self.rect = self.design.get_rect()
 		self.rect.right = 0
 		self.rect.bottom = 0
@@ -20,14 +18,15 @@ class Player():
 		self.speed = 0
 		self.background = background
 		self.in_jump = True
-		self.in_move = False
+		self.in_move = True
 		self.global_move = 0
 		self.Length_Move = 0.6
+		self.designfolder = "designfolder/"
 
 	def show(self):
 		if self.in_move != True and self.in_jump != True:
 			self.look = "standing"
-			self.design = pygame.image.load("standing.png")
+			self.design = pygame.image.load(self.designfolder+"standing.png")
 		oldx = self.rect.right
 		oldy = self.rect.bottom
 		self.physics()
@@ -58,6 +57,31 @@ class Player():
 			self.in_jump = False
 			self.velocity = 0
 
+class Player(Person):
+
+	def __init__(self, MovementArray, MovementUnit, screen, MovementX, MovementY, background):
+		self.designfolder = "Player/"
+		self.design = pygame.image.load(self.designfolder+"standing.png").convert_alpha()
+		self.look = "standing"
+		self.movementArray = MovementArray
+		self.movementUnit = MovementUnit
+		self.movementX = MovementX
+		self.movementY = MovementY
+		self.rect = self.design.get_rect()
+		self.rect.right = 0
+		self.rect.bottom = 0
+		self.rect = self.rect.move(self.movementUnit.x, self.movementUnit.y)
+		self.screen = screen
+		self.velocity = 0
+		self.speed = 0
+		self.background = background
+		self.in_jump = True
+		self.in_move = False
+		self.global_move = 0
+		self.Length_Move = 0.6
+
+
+
 	def move(self, direction, to_move):
 		to_return = 0
 		self.in_move = True
@@ -78,15 +102,15 @@ class Player():
 			if self.look == "running1":
 				self.look = "running2"
 				if self.speed > 0:
-					self.design = pygame.image.load("running2right.png")
+					self.design = pygame.image.load(self.designfolder+"running2right.png")
 				else:
-					self.design = pygame.image.load("running2left.png")
+					self.design = pygame.image.load(self.designfolder+"running2left.png")
 			else:
 				self.look = "running1"
 				if self.speed > 0:
-					self.design = pygame.image.load("running1right.png")
+					self.design = pygame.image.load(self.designfolder+"running1right.png")
 				else:
-					self.design = pygame.image.load("running1left.png")
+					self.design = pygame.image.load(self.designfolder+"running1left.png")
 		#check if move is allowed (if movable == True)
 		try:
 			self.movementUnit = self.movementArray[self.movementY][self.movementX]
@@ -107,11 +131,12 @@ class Player():
 		return to_return * self.Length_Move
 
 	def jump(self):
-		if self.in_jump == False:
-			self.velocity = -140
-			self.in_jump = True
-			"""self.look = "standing"
-			self.design = pygame.image.load("standing.png")"""
+		try:
+			if self.in_jump == False and self.movementArray[self.movementY+1][self.movementX].movable == False:
+				self.velocity = -140
+				self.in_jump = True
+		except:
+			None
 
 	def move_blocks(self, speed, to_move):
 		for unit in to_move:
