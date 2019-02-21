@@ -21,7 +21,7 @@ class Person():
 		self.in_move = True
 		self.global_move = 0
 		self.Length_Move = 0.6
-		self.designfolder = "designfolder/"
+		self.designfolder = designfolder+"/"
 
 	def show(self):
 		if self.in_move != True and self.in_jump != True:
@@ -113,7 +113,7 @@ class Player(Person):
 					self.design = pygame.image.load(self.designfolder+"running1left.png")
 		#check if move is allowed (if movable == True)
 		try:
-			self.movementUnit = self.movementArray[self.movementY][self.movementX]
+			self.movementUnit = self.movementArray[self.movementY-20][self.movementX]
 			if direction == "right":
 				if self.movementUnit.x - self.global_move > 500:
 					to_return = SPEED
@@ -141,3 +141,30 @@ class Player(Person):
 	def move_blocks(self, speed, to_move):
 		for unit in to_move:
 			unit.x += -speed
+
+
+
+class Enemy(Person):
+
+	def __init__(self, MovementArray, MovementUnit, screen, MovementX, MovementY, background, designfolder):
+		super().__init__(MovementArray, MovementUnit, screen, MovementX, MovementY, background, designfolder)
+		self.direction = randint(0,11) % 2
+		if self.direction == 0:
+			self.direction = -1
+		self.distance = 0
+		self.speed = 35
+
+	def walk(self):
+		to_move = self.speed * self.direction
+		self.movementX += to_move
+		self.distance += self.speed
+		try:
+			self.movementUnit = self.movementArray[self.movementY][self.movementX]
+			assert(self.movementUnit.movable == True)
+		except:
+			self.movementX += -to_move
+			self.movementUnit = self.movementArray[self.movementY][self.movementX]
+
+		if self.distance > 300:
+			self.distance = 0
+			self.direction = self.direction * -1
