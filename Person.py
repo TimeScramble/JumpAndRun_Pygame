@@ -28,10 +28,6 @@ class Person():
 		if self.in_move != True and self.in_jump != True:
 			self.look = "standing"
 			self.design = pygame.image.load(self.designfolder+"standing.png")
-		"""try:
-			self.design = pygame.image.load(self.designfolder+self.look+".png")
-		except:
-			None"""
 		oldx = self.rect.right
 		oldy = self.rect.bottom
 		self.physics()
@@ -86,6 +82,7 @@ class Player(Person):
 		self.in_move = False
 		self.global_move = 0
 		self.Length_Move = 0.4
+		self.last_direction = "right"
 
 
 
@@ -98,8 +95,10 @@ class Player(Person):
 			SPEED += 5
 		if direction == "right":
 			self.speed = SPEED
+			self.last_direction = "right"
 		elif direction == "left":
 			self.speed = -SPEED
+			self.last_direction = "left"
 		elif direction == None:
 			self.speed = 0
 		#add speed to x_coordinate
@@ -140,8 +139,12 @@ class Player(Person):
 	def jump(self):
 		try:
 			if self.in_jump == False and self.movementArray[self.movementY+1][self.movementX].movable == False:
-				self.velocity = -140
+				self.velocity = -125
 				self.in_jump = True
+				if self.last_direction == "right":
+					self.design = pygame.image.load(self.designfolder+"jumpingright.png")
+				else:
+					self.design = pygame.image.load(self.designfolder+"jumpingleft.png")
                 
 		except:
 			None
