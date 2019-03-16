@@ -28,10 +28,10 @@ class Person():
 		if self.in_move != True and self.in_jump != True:
 			self.look = "standing"
 			self.design = pygame.image.load(self.designfolder+"standing.png")
-		try:
+		"""try:
 			self.design = pygame.image.load(self.designfolder+self.look+".png")
 		except:
-			None
+			None"""
 		oldx = self.rect.right
 		oldy = self.rect.bottom
 		self.physics()
@@ -142,6 +142,7 @@ class Player(Person):
 			if self.in_jump == False and self.movementArray[self.movementY+1][self.movementX].movable == False:
 				self.velocity = -140
 				self.in_jump = True
+                
 		except:
 			None
 

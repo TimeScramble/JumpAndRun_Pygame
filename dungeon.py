@@ -12,12 +12,12 @@ to_show = []
 people = []
 speed = [5, 9]
 black = 0, 0, 0
-screen = pygame.display.set_mode(size)
+screen = pygame.display.set_mode(size, FULLSCREEN)
 background = pygame.image.load("background.png").convert_alpha()
 
 #Define Length and Height of Movement_Units
-Length_Move = 0.4
-Height_Move = 0.4
+Length_Move = 0.5
+Height_Move = 0.5
 #Define Length and Height of Blocks
 LENGTH = 42
 HEIGHT = 42
@@ -106,7 +106,7 @@ current_key = None
 
 while True:
 	should_move = 0
-	clock.tick(20)
+	clock.tick(10)
 	screen.blit(background, (0, 0))
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
